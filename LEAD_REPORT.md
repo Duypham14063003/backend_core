@@ -136,5 +136,3 @@ Tech Lead có thể chạy trực tiếp các lệnh kiểm thử sau trong term
 
 - **Tài khoản Quản trị (Admin):** `admin@example.com` / Mật khẩu: `Admin123@` (Role: `ADMIN`)
 - **Tài khoản Người dùng (User):** `user@example.com` / Mật khẩu: `User123@` (Role: `USER`)
-
-*Báo cáo được khởi tạo tự động bởi hệ thống Antigravity AI Codebase Audit.*
