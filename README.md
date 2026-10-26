@@ -82,6 +82,14 @@ npm run build
 npm run start:prod
 ```
 
+### 4. Run Automated API Demo Flow
+
+Sau khi server đã khởi động, mở một terminal mới và chạy:
+```bash
+npm run demo
+```
+Script sẽ tự động thực hiện và kiểm tra toàn bộ luồng User Login, User Profile, User xem quà, Admin Login, bảo mật phân quyền RBAC và CRUD quà tặng của Admin.
+
 API Documentation (Swagger UI) is available at:  
 👉 **http://localhost:3000/api/docs**
 
@@ -184,4 +192,26 @@ Lệnh này sẽ tự động:
 TOTAL SCORE : 100 / 100 pts (A+ (Excellent))
 ========================================================================
 ```
-# backend_core
+
+---
+
+## ⚡ Live Demo Kiểm Thử Tự Động Toàn Bộ 5 Luồng API
+
+Dự án cung cấp sẵn kịch bản chạy demo tự động toàn bộ 5 luồng API nghiệp vụ (kèm in mã màu và kết quả HTTP status):
+
+```bash
+# 1. Khởi động server NestJS (nếu chưa chạy)
+npm run start:dev
+
+# 2. Mở một terminal mới và chạy kịch bản demo:
+npm run demo
+```
+
+Kịch bản `npm run demo` sẽ tự động bắn request thật qua HTTP để kiểm tra lần lượt:
+1. **Authen User**: Login lấy token -> Xem Profile cá nhân -> Cập nhật Profile.
+2. **User Gifts Catalog**: Lấy danh sách quà đang kích hoạt (`isActive: true`, có search & phân trang) -> Xem chi tiết quà.
+3. **Bảo mật RBAC & Admin Authen**:
+   - Thử dùng tài khoản User login vào Admin -> Bị chặn `403 Forbidden`.
+   - Admin login hợp lệ -> Nhận Admin Token.
+   - Thử dùng token User gọi API quản lý quà của Admin -> Bị `RolesGuard` chặn `403 Forbidden`.
+4. **Admin Gifts CRUD**: Admin tạo quà mới (HTTP 201) -> Admin cập nhật quà (HTTP 200) -> Admin xóa quà (HTTP 200).
