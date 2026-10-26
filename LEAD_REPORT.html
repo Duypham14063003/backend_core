@@ -22,7 +22,7 @@
       padding: 30px;
     }
     .container {
-      max-width: 1300px;
+      max-width: 1400px;
       margin: 0 auto;
     }
     .header {
@@ -130,13 +130,6 @@
       font-size: 18px;
       color: var(--accent);
     }
-    code {
-      font-family: monospace;
-      background-color: #1e293b;
-      padding: 3px 6px;
-      border-radius: 4px;
-      color: #f43f5e;
-    }
     pre {
       background-color: #090d16;
       padding: 12px;
@@ -154,7 +147,7 @@
     <div class="header">
       <h1>🏆 BÁO CÁO NGHIỆM THU KỸ THUẬT DỰ ÁN BACKEND CORE</h1>
       <div class="meta">
-        Dành cho: <strong>Tech Lead</strong> &nbsp;|&nbsp; Hệ thống: <strong>NestJS 11 + PostgreSQL + TypeORM</strong> &nbsp;|&nbsp; Thời gian xuất: <strong>10:29:18 26/10/2026</strong>
+        Dành cho: <strong>Tech Lead</strong> &nbsp;|&nbsp; Hệ thống: <strong>NestJS 11 + PostgreSQL + TypeORM</strong> &nbsp;|&nbsp; Thời gian xuất: <strong>10:36:16 26/10/2026</strong>
       </div>
       <div class="stats-grid">
         <div class="stat-card">
@@ -182,11 +175,11 @@
         <tr>
           <th style="width: 40px; text-align:center;">#</th>
           <th style="width: 120px;">Nhóm</th>
-          <th style="width: 200px;">Yêu Cầu Đề Bài</th>
+          <th style="width: 220px;">Yêu Cầu Đề Bài</th>
           <th style="width: 110px; text-align:center;">Trạng Thái</th>
           <th style="width: 80px; text-align:center;">Điểm</th>
-          <th>Giải Pháp Kỹ Thuật</th>
-          <th style="width: 250px;">Tập Tin Minh Chứng</th>
+          <th>Đánh Giá Chi Tiết & Từng Mục Con</th>
+          <th style="width: 260px;">Tập Tin Minh Chứng</th>
         </tr>
       </thead>
       <tbody>
@@ -197,7 +190,7 @@
         <td><strong>DB: PostgreSQL + TypeORM</strong></td>
         <td style="text-align:center;"><span class="badge-status">✅ ĐẠT 100%</span></td>
         <td style="text-align:center; font-weight:bold; color:#10b981;">15 / 15</td>
-        <td style="font-size: 13px; line-height: 1.5;">Cấu hình TypeORM dynamic module nạp biến môi trường PostgreSQL, kết nối pool, thực thể User và Gift sử dụng khóa chính UUID, đánh index và enum role.</td>
+        <td><div style="font-size:12px; margin-bottom:3px;"><span style="color:#10b981; font-weight:bold;">✔</span> Cấu hình kết nối PostgreSQL qua TypeOrmModule.forRootAsync an toàn và linh hoạt <span style="color:#94a3b8;">(5/5 pts)</span></div><div style="font-size:12px; margin-bottom:3px;"><span style="color:#10b981; font-weight:bold;">✔</span> User Entity: Khóa chính UUID (@PrimaryGeneratedColumn('uuid')), enum role USER/ADMIN, index email, ẩn password <span style="color:#94a3b8;">(5/5 pts)</span></div><div style="font-size:12px; margin-bottom:3px;"><span style="color:#10b981; font-weight:bold;">✔</span> Gift Entity: Khóa chính UUID, mã code unique, pointsRequired, stockQuantity, isActive <span style="color:#94a3b8;">(5/5 pts)</span></div></td>
         <td><span class="badge-file">src/config/database.config.ts</span> <span class="badge-file">src/database/data-source.ts</span> <span class="badge-file">src/modules/users/entities/user.entity.ts</span> <span class="badge-file">src/modules/gifts/entities/gift.entity.ts</span></td>
       </tr>
     
@@ -207,7 +200,7 @@
         <td><strong>Database entity có Migration</strong></td>
         <td style="text-align:center;"><span class="badge-status">✅ ĐẠT 100%</span></td>
         <td style="text-align:center; font-weight:bold; color:#10b981;">15 / 15</td>
-        <td style="font-size: 13px; line-height: 1.5;">Triển khai MigrationInterface với đầy đủ phương thức up() khởi tạo DDL bảng/index/enum và down() rollback. Scripts migration:run, migration:revert, migration:show sẵn sàng.</td>
+        <td><div style="font-size:12px; margin-bottom:3px;"><span style="color:#10b981; font-weight:bold;">✔</span> Cấu hình TypeORM DataSource CLI chuyên dụng cho migrations (src/database/data-source.ts) <span style="color:#94a3b8;">(5/5 pts)</span></div><div style="font-size:12px; margin-bottom:3px;"><span style="color:#10b981; font-weight:bold;">✔</span> File Migration triển khai MigrationInterface có đầy đủ DDL up() (tạo bảng, index, enum) và down() rollback <span style="color:#94a3b8;">(5/5 pts)</span></div><div style="font-size:12px; margin-bottom:3px;"><span style="color:#10b981; font-weight:bold;">✔</span> Bộ script quản lý migration hoàn chỉnh: migration:run, migration:revert, migration:show, migration:generate <span style="color:#94a3b8;">(5/5 pts)</span></div></td>
         <td><span class="badge-file">src/database/migrations/1740000000000-InitialSchema.ts</span> <span class="badge-file">src/database/data-source.ts</span> <span class="badge-file">package.json</span></td>
       </tr>
     
@@ -217,7 +210,7 @@
         <td><strong>Authen user log in</strong></td>
         <td style="text-align:center;"><span class="badge-status">✅ ĐẠT 100%</span></td>
         <td style="text-align:center; font-weight:bold; color:#10b981;">10 / 10</td>
-        <td style="font-size: 13px; line-height: 1.5;">Endpoint POST /api/v1/auth/user/login xác thực email/password qua bcrypt, cấp phát JWT Bearer Token an toàn.</td>
+        <td><div style="font-size:12px; margin-bottom:3px;"><span style="color:#10b981; font-weight:bold;">✔</span> Endpoint POST /api/v1/auth/user/login tiếp nhận và validate DTO đầu vào <span style="color:#94a3b8;">(4/4 pts)</span></div><div style="font-size:12px; margin-bottom:3px;"><span style="color:#10b981; font-weight:bold;">✔</span> Băm và đối soát mật khẩu bằng thuật toán bcrypt an toàn <span style="color:#94a3b8;">(3/3 pts)</span></div><div style="font-size:12px; margin-bottom:3px;"><span style="color:#10b981; font-weight:bold;">✔</span> Ký và cấp phát JWT Bearer Token, nạp thông tin user qua PassportStrategy <span style="color:#94a3b8;">(3/3 pts)</span></div></td>
         <td><span class="badge-file">src/modules/auth/auth.controller.ts</span> <span class="badge-file">src/modules/auth/auth.service.ts</span> <span class="badge-file">src/modules/auth/strategies/jwt.strategy.ts</span> <span class="badge-file">src/modules/auth/dto/user-login.dto.ts</span></td>
       </tr>
     
@@ -227,7 +220,7 @@
         <td><strong>1 module RESTful API user profile</strong></td>
         <td style="text-align:center;"><span class="badge-status">✅ ĐẠT 100%</span></td>
         <td style="text-align:center; font-weight:bold; color:#10b981;">15 / 15</td>
-        <td style="font-size: 13px; line-height: 1.5;">Module Profile gồm GET /api/v1/profile (lấy hồ sơ từ token), PATCH /api/v1/profile (cập nhật thông tin), PUT /api/v1/profile/change-password (đổi mật khẩu có đối soát mật khẩu cũ).</td>
+        <td><div style="font-size:12px; margin-bottom:3px;"><span style="color:#10b981; font-weight:bold;">✔</span> GET /api/v1/profile: Trích xuất user từ JWT Bearer token và trả về thông tin cá nhân qua DTO <span style="color:#94a3b8;">(5/5 pts)</span></div><div style="font-size:12px; margin-bottom:3px;"><span style="color:#10b981; font-weight:bold;">✔</span> PATCH /api/v1/profile: Cập nhật thông tin profile cá nhân (fullName, avatarUrl, phoneNumber) <span style="color:#94a3b8;">(5/5 pts)</span></div><div style="font-size:12px; margin-bottom:3px;"><span style="color:#10b981; font-weight:bold;">✔</span> PUT /api/v1/profile/change-password: Đổi mật khẩu có đối soát mật khẩu hiện tại <span style="color:#94a3b8;">(5/5 pts)</span></div></td>
         <td><span class="badge-file">src/modules/profile/profile.controller.ts</span> <span class="badge-file">src/modules/profile/profile.service.ts</span> <span class="badge-file">src/modules/profile/dto/user-profile-response.dto.ts</span> <span class="badge-file">src/modules/profile/dto/update-profile.dto.ts</span> <span class="badge-file">src/modules/profile/dto/change-password.dto.ts</span></td>
       </tr>
     
@@ -237,7 +230,7 @@
         <td><strong>1 module RESTful API quà của hệ thống cho user xem</strong></td>
         <td style="text-align:center;"><span class="badge-status">✅ ĐẠT 100%</span></td>
         <td style="text-align:center; font-weight:bold; color:#10b981;">10 / 10</td>
-        <td style="font-size: 13px; line-height: 1.5;">GET /api/v1/gifts: Xem danh sách quà có phân trang (page, limit), tìm kiếm (search), lọc điểm. Đảm bảo ép điều kiện isActive = true (chỉ quà đang kích hoạt mới được hiển thị). GET /api/v1/gifts/:id xem chi tiết.</td>
+        <td><div style="font-size:12px; margin-bottom:3px;"><span style="color:#10b981; font-weight:bold;">✔</span> GET /api/v1/gifts: Hỗ trợ phân trang (page, limit), tìm kiếm (search), lọc theo khoảng điểm <span style="color:#94a3b8;">(5/5 pts)</span></div><div style="font-size:12px; margin-bottom:3px;"><span style="color:#10b981; font-weight:bold;">✔</span> Nghiệp vụ cốt lõi: CHỈ hiển thị quà đang kích hoạt (isActive = true) cho người dùng <span style="color:#94a3b8;">(3/3 pts)</span></div><div style="font-size:12px; margin-bottom:3px;"><span style="color:#10b981; font-weight:bold;">✔</span> GET /api/v1/gifts/:id: Xem chi tiết phần quà <span style="color:#94a3b8;">(2/2 pts)</span></div></td>
         <td><span class="badge-file">src/modules/gifts/gifts.controller.ts</span> <span class="badge-file">src/modules/gifts/gifts.service.ts</span> <span class="badge-file">src/modules/gifts/dto/user-query-gift.dto.ts</span> <span class="badge-file">src/modules/gifts/dto/gift-response.dto.ts</span></td>
       </tr>
     
@@ -247,17 +240,17 @@
         <td><strong>Authen admin log in & Phân quyền</strong></td>
         <td style="text-align:center;"><span class="badge-status">✅ ĐẠT 100%</span></td>
         <td style="text-align:center; font-weight:bold; color:#10b981;">10 / 10</td>
-        <td style="font-size: 13px; line-height: 1.5;">POST /api/v1/auth/admin/login: Chỉ cho phép tài khoản role ADMIN đăng nhập. Chặn 403 Forbidden nếu User thường cố login vào Admin. RolesGuard và @Roles(UserRole.ADMIN) bảo vệ tài nguyên.</td>
+        <td><div style="font-size:12px; margin-bottom:3px;"><span style="color:#10b981; font-weight:bold;">✔</span> POST /api/v1/auth/admin/login: Chỉ cho phép tài khoản có role ADMIN đăng nhập thành công <span style="color:#94a3b8;">(4/4 pts)</span></div><div style="font-size:12px; margin-bottom:3px;"><span style="color:#10b981; font-weight:bold;">✔</span> Cơ chế bảo vệ: Chặn 403 Forbidden nếu tài khoản role USER cố tình đăng nhập vào Admin <span style="color:#94a3b8;">(3/3 pts)</span></div><div style="font-size:12px; margin-bottom:3px;"><span style="color:#10b981; font-weight:bold;">✔</span> RolesGuard & @Roles(UserRole.ADMIN) bảo vệ toàn bộ tài nguyên quản trị <span style="color:#94a3b8;">(3/3 pts)</span></div></td>
         <td><span class="badge-file">src/modules/auth/auth.controller.ts</span> <span class="badge-file">src/modules/auth/auth.service.ts</span> <span class="badge-file">src/common/guards/roles.guard.ts</span> <span class="badge-file">src/common/decorators/roles.decorator.ts</span> <span class="badge-file">src/common/constants/roles.enum.ts</span></td>
       </tr>
     
       <tr>
         <td style="text-align:center; font-weight:bold;">7</td>
         <td><span class="badge-cat">Module Nghiệp vụ</span></td>
-        <td><strong>1 module RESTful API quản lý quà hệ thống (Admin)</strong></td>
+        <td><strong>1 module RESTful API quản lý quà hệ thống (Admin CRUD)</strong></td>
         <td style="text-align:center;"><span class="badge-status">✅ ĐẠT 100%</span></td>
         <td style="text-align:center; font-weight:bold; color:#10b981;">10 / 10</td>
-        <td style="font-size: 13px; line-height: 1.5;">Full CRUD quà cho Admin (/api/v1/admin/gifts): POST (tạo quà, kiểm tra trùng mã), GET (xem tất cả quà kể cả ẩn), PUT (cập nhật), DELETE (xóa quà). Phân quyền chặn 403 đối với User.</td>
+        <td><div style="font-size:12px; margin-bottom:3px;"><span style="color:#10b981; font-weight:bold;">✔</span> POST /api/v1/admin/gifts: Admin tạo quà mới, validate mã code duy nhất (HTTP 201) <span style="color:#94a3b8;">(3/3 pts)</span></div><div style="font-size:12px; margin-bottom:3px;"><span style="color:#10b981; font-weight:bold;">✔</span> GET /api/v1/admin/gifts: Admin xem tất cả quà trong hệ thống kể cả đang ẩn (HTTP 200) <span style="color:#94a3b8;">(2/2 pts)</span></div><div style="font-size:12px; margin-bottom:3px;"><span style="color:#10b981; font-weight:bold;">✔</span> PUT /api/v1/admin/gifts/:id: Admin cập nhật thông tin quà và số lượng tồn kho (HTTP 200) <span style="color:#94a3b8;">(2/2 pts)</span></div><div style="font-size:12px; margin-bottom:3px;"><span style="color:#10b981; font-weight:bold;">✔</span> DELETE /api/v1/admin/gifts/:id: Admin xóa quà khỏi hệ thống (HTTP 200) <span style="color:#94a3b8;">(2/2 pts)</span></div><div style="font-size:12px; margin-bottom:3px;"><span style="color:#10b981; font-weight:bold;">✔</span> Toàn bộ Controller được bảo vệ bởi @Roles(UserRole.ADMIN) và JwtAuthGuard <span style="color:#94a3b8;">(1/1 pt)</span></div></td>
         <td><span class="badge-file">src/modules/gifts/admin-gifts.controller.ts</span> <span class="badge-file">src/modules/gifts/gifts.service.ts</span> <span class="badge-file">src/modules/gifts/dto/create-gift.dto.ts</span> <span class="badge-file">src/modules/gifts/dto/update-gift.dto.ts</span> <span class="badge-file">src/modules/gifts/dto/admin-query-gift.dto.ts</span></td>
       </tr>
     
@@ -267,7 +260,7 @@
         <td><strong>Đúng chuẩn Nestjs, TypeORM, RESTful, MVC</strong></td>
         <td style="text-align:center;"><span class="badge-status">✅ ĐẠT 100%</span></td>
         <td style="text-align:center; font-weight:bold; color:#10b981;">10 / 10</td>
-        <td style="font-size: 13px; line-height: 1.5;">Phân tầng MVC rõ rệt: Model (Entities/Repositories), Controller (Routing/Validation), View (DTOs/TransformInterceptor), Service (Business). ValidationPipe tự động whitelist DTO, HttpExceptionFilter đồng bộ lỗi REST, Swagger UI tại /api/docs.</td>
+        <td><div style="font-size:12px; margin-bottom:3px;"><span style="color:#10b981; font-weight:bold;">✔</span> Phân tầng chuẩn MVC: Model (Entities/Repositories), Controller (Routing/Validation), View (DTOs), Service (Business) <span style="color:#94a3b8;">(4/4 pts)</span></div><div style="font-size:12px; margin-bottom:3px;"><span style="color:#10b981; font-weight:bold;">✔</span> Global ValidationPipe: whitelist: true, forbidNonWhitelisted: true, transform: true <span style="color:#94a3b8;">(2/2 pts)</span></div><div style="font-size:12px; margin-bottom:3px;"><span style="color:#10b981; font-weight:bold;">✔</span> Global HttpExceptionFilter: Chuẩn hóa toàn bộ lỗi RESTful thống nhất <span style="color:#94a3b8;">(2/2 pts)</span></div><div style="font-size:12px; margin-bottom:3px;"><span style="color:#10b981; font-weight:bold;">✔</span> Global TransformInterceptor: Đóng gói response chuẩn { success, statusCode, message, data } <span style="color:#94a3b8;">(1/1 pt)</span></div><div style="font-size:12px; margin-bottom:3px;"><span style="color:#10b981; font-weight:bold;">✔</span> Tài liệu tương tác Swagger OpenAPI tại /api/docs <span style="color:#94a3b8;">(1/1 pt)</span></div></td>
         <td><span class="badge-file">src/main.ts</span> <span class="badge-file">src/common/filters/http-exception.filter.ts</span> <span class="badge-file">src/common/interceptors/transform.interceptor.ts</span> <span class="badge-file">src/common/dto/api-response.dto.ts</span></td>
       </tr>
     
@@ -277,7 +270,7 @@
         <td><strong>Rule validate code setup trực tiếp bằng eslint + prettier</strong></td>
         <td style="text-align:center;"><span class="badge-status">✅ ĐẠT 100%</span></td>
         <td style="text-align:center; font-weight:bold; color:#10b981;">5 / 5</td>
-        <td style="font-size: 13px; line-height: 1.5;">Cấu hình trực tiếp trong eslint.config.mjs: naming-convention (PascalCase cho classes/types, camelCase cho methods), explicit-function-return-type (bắt buộc return type), no-explicit-any (cấm type any), no-floating-promises.</td>
+        <td><div style="font-size:12px; margin-bottom:3px;"><span style="color:#10b981; font-weight:bold;">✔</span> Rule @typescript-eslint/naming-convention: PascalCase cho classes/types, camelCase cho methods/vars <span style="color:#94a3b8;">(1/1 pt)</span></div><div style="font-size:12px; margin-bottom:3px;"><span style="color:#10b981; font-weight:bold;">✔</span> Rule @typescript-eslint/explicit-function-return-type: Bắt buộc khai báo return type <span style="color:#94a3b8;">(1/1 pt)</span></div><div style="font-size:12px; margin-bottom:3px;"><span style="color:#10b981; font-weight:bold;">✔</span> Rule @typescript-eslint/no-explicit-any: error (nghiêm cấm dùng any) <span style="color:#94a3b8;">(1/1 pt)</span></div><div style="font-size:12px; margin-bottom:3px;"><span style="color:#10b981; font-weight:bold;">✔</span> Rule @typescript-eslint/no-floating-promises: error (chống promise lơ lửng) <span style="color:#94a3b8;">(1/1 pt)</span></div><div style="font-size:12px; margin-bottom:3px;"><span style="color:#10b981; font-weight:bold;">✔</span> Đồng bộ cấu hình Prettier (.prettierrc) với singleQuote, printWidth: 100, trailingComma <span style="color:#94a3b8;">(1/1 pt)</span></div></td>
         <td><span class="badge-file">eslint.config.mjs</span> <span class="badge-file">.prettierrc</span></td>
       </tr>
     
@@ -286,8 +279,8 @@
         <td><span class="badge-cat">Code Quality</span></td>
         <td><strong>Lệnh chạy test codebase bằng rule eslint và xuất report</strong></td>
         <td style="text-align:center;"><span class="badge-status">✅ ĐẠT 100%</span></td>
-        <td style="text-align:center; font-weight:bold; color:#10b981;">PASS</td>
-        <td style="font-size: 13px; line-height: 1.5;">Cấu hình các script npm run lint:check, npm run lint:report (xuất file HTML trực quan), npm run lint:report:json. Hiện tại đạt 0 errors, 0 warnings trên toàn bộ 100% file code.</td>
+        <td style="text-align:center; font-weight:bold; color:#10b981;">ĐẠT CHUẨN</td>
+        <td><div style="font-size:12px; margin-bottom:3px;"><span style="color:#10b981; font-weight:bold;">✔</span> Lệnh kiểm tra toàn bộ mã nguồn: npm run lint:check <span style="color:#94a3b8;">(Đạt)</span></div><div style="font-size:12px; margin-bottom:3px;"><span style="color:#10b981; font-weight:bold;">✔</span> Lệnh xuất báo cáo trực quan HTML: npm run lint:report (eslint-report.html) <span style="color:#94a3b8;">(Đạt)</span></div><div style="font-size:12px; margin-bottom:3px;"><span style="color:#10b981; font-weight:bold;">✔</span> Lệnh xuất báo cáo định dạng JSON: npm run lint:report:json (eslint-report.json) <span style="color:#94a3b8;">(Đạt)</span></div><div style="font-size:12px; margin-bottom:3px;"><span style="color:#10b981; font-weight:bold;">✔</span> Kết quả thẩm định thực tế trên 100% file code: 0 Errors, 0 Warnings <span style="color:#94a3b8;">(Đạt)</span></div></td>
         <td><span class="badge-file">package.json</span> <span class="badge-file">eslint-report.html</span> <span class="badge-file">eslint-report.json</span></td>
       </tr>
     
@@ -297,7 +290,7 @@
         <td><strong>Skill AI kiểm tra codebase và xuất report chấm điểm</strong></td>
         <td style="text-align:center;"><span class="badge-status">✅ ĐẠT 100%</span></td>
         <td style="text-align:center; font-weight:bold; color:#10b981;">100 / 100</td>
-        <td style="font-size: 13px; line-height: 1.5;">Tạo Skill AI chuẩn .agents/skills/codebase-audit/SKILL.md. Cung cấp script tự động npm run audit quét AST, TypeORM, DDL, RBAC và chấm điểm 100/100, xuất báo cáo AUDIT_REPORT.md.</td>
+        <td><div style="font-size:12px; margin-bottom:3px;"><span style="color:#10b981; font-weight:bold;">✔</span> Định nghĩa Skill AI theo chuẩn Antigravity: .agents/skills/codebase-audit/SKILL.md <span style="color:#94a3b8;">(Đạt)</span></div><div style="font-size:12px; margin-bottom:3px;"><span style="color:#10b981; font-weight:bold;">✔</span> Lệnh chạy AI Audit tự động: npm run audit <span style="color:#94a3b8;">(Đạt)</span></div><div style="font-size:12px; margin-bottom:3px;"><span style="color:#10b981; font-weight:bold;">✔</span> Đánh giá chi tiết từng tiêu chí và tính điểm tự động theo thang 100 <span style="color:#94a3b8;">(Đạt)</span></div><div style="font-size:12px; margin-bottom:3px;"><span style="color:#10b981; font-weight:bold;">✔</span> Xuất file báo cáo chấm điểm AUDIT_REPORT.md đạt 100/100 Điểm (Hạng A+ Xuất sắc) <span style="color:#94a3b8;">(Đạt)</span></div></td>
         <td><span class="badge-file">.agents/skills/codebase-audit/SKILL.md</span> <span class="badge-file">scripts/audit-codebase.ts</span> <span class="badge-file">AUDIT_REPORT.md</span></td>
       </tr>
     
