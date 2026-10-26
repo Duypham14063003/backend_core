@@ -23,6 +23,7 @@
     "migration:revert": "typeorm-ts-node-commonjs migration:revert -d src/database/data-source.ts",
     "migration:generate": "typeorm-ts-node-commonjs migration:generate -d src/database/data-source.ts",
     "audit": "ts-node -O '{\"module\":\"commonjs\"}' scripts/audit-codebase.ts",
+    "audit:independent": "ts-node -O '{\"module\":\"commonjs\"}' scripts/independent-audit.ts",
     "demo": "ts-node -O '{\"module\":\"commonjs\"}' scripts/demo-apis.ts",
     "verify": "ts-node -O '{\"module\":\"commonjs\"}' scripts/verify-all.ts",
     "test:requirements": "ts-node -O '{\"module\":\"commonjs\"}' scripts/verify-all.ts",
