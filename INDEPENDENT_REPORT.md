@@ -1,9 +1,33 @@
 # REPORT — Review Backend NestJS (Độc lập & Khách quan)
 
 > **Project:** `duy_ngoc/backend_core`  
-> **Thời gian thẩm định:** 16:23:44 26/10/2026  
+> **Thời gian thẩm định:** 16:37:53 26/10/2026  
 > **Cơ chế thẩm định:** Phân tích cú pháp tĩnh AST (TypeScript Compiler API) + Kiểm thử hành vi Runtime  
+> **Kết quả thẩm định:** **41 / 41 Tiêu chí Đạt** (100/100 Điểm) — **3 Tiêu chí N/A**  
 > **Kết luận tổng:** Đã rà soát toàn bộ 44 tiêu chí kỹ thuật. Toàn bộ 5 điểm tồn đọng trước đây trong file đánh giá của Tech Lead (HTTP 400, DELETE 204, JWT validator, redundant query, magic string) **đều đã được khắc phục triệt để trong source code**.
+
+---
+
+## 0. Bảng Đối Chiếu Trực Tiếp Với Đề Bài Giao Việc (Mapping Matrix)
+
+Bảng dưới đây ánh xạ 100% các yêu cầu từ đề bài ban đầu với các tiêu chí kỹ thuật chuẩn mực được kiểm tra trong báo cáo:
+
+| STT | Yêu Cầu Đề Bài Giao Việc | Tiêu Chí Kỹ Thuật Tương Ứng Trong Báo Cáo | Trạng Thái | Minh Chứng Code |
+| :---: | :--- | :--- | :---: | :--- |
+| 1 | **DB: PostgreSQL + TypeORM** | Nhóm 1 (1.1, 1.2, 1.3) + Cấu hình Connection Pool | **ĐẠT** | `src/config/database.config.ts`, `src/database/data-source.ts` |
+| 2 | **Chức năng: Authen user log in** | Tiêu chí 2.1 (Login/JWT) + Tiêu chí 4.6 (Mã lỗi 400 khi sai password) | **ĐẠT** | `src/modules/auth/auth.service.ts` |
+| 3 | **Chức năng: 1 module RESTful API user profile** | Tiêu chí 2.3 (GET/PATCH/PUT) + Tiêu chí 9.1 (Tối ưu 1 query, không double-fetch) | **ĐẠT** | `src/modules/profile/profile.service.ts` |
+| 4 | **Chức năng: 1 module RESTful API quà hệ thống (User)** | Tiêu chí 2.4 (Xem quà active=true, search, pagination) + Tiêu chí 1.7 | **ĐẠT** | `src/modules/gifts/gifts.service.ts` |
+| 5 | **Chức năng: Authen admin log in** | Tiêu chí 2.2 (Admin login tách role) + Tiêu chí 6.5 (Chống user enumeration) | **ĐẠT** | `src/modules/auth/auth.service.ts` |
+| 6 | **Chức năng: 1 module RESTful API quản lý quà (Admin CRUD)** | Tiêu chí 2.5 (Admin CRUD) + Tiêu chí 4.2 (DELETE trả về HTTP 204 No Content) | **ĐẠT** | `src/modules/gifts/admin-gifts.controller.ts` |
+| 7 | **Chức năng: Database entity có migration** | Tiêu chí 1.4 (Migration up/down) + Tiêu chí 1.5 (DDL khớp 100% Entity) | **ĐẠT** | `src/database/migrations/1740000000000-InitialSchema.ts` |
+| 8 | **Đúng chuẩn Nestjs và TypeORM** | Nhóm 1 (1.1 - 1.7) + Nhóm 3 (3.1 - 3.6: Module, Provider, Pipe, Filter) | **ĐẠT** | `src/app.module.ts`, `src/main.ts` |
+| 9 | **Đúng chuẩn RESTful** | Nhóm 4 (4.1 - 4.6: POST/GET/PUT/DELETE, HTTP 201/204/400/404, UUID Pipe) | **ĐẠT** | Toàn bộ Controllers |
+| 10 | **Đúng chuẩn MVC** | Nhóm 5 (5.1 - 5.4: Thin Controller, Service, Entity, DTO response format) | **ĐẠT** | Cấu trúc phân tầng module |
+| 11 | **Chuẩn format code theo eslint + prettier** | Nhóm 8 (8.1, 8.2: Siết chặt no-console, code dùng Logger) | **ĐẠT** | `eslint.config.mjs`, `.prettierrc` |
+| 12 | **Rule validate code setup trực tiếp bằng eslint** | Tiêu chí 8.1 (naming-convention, explicit return type, no-explicit-any) | **ĐẠT** | `eslint.config.mjs` |
+| 13 | **Lệnh chạy test codebase bằng rule eslint xuất report** | Tiêu chí 8.1 (`npm run lint:check`, `npm run lint:report` xuất `eslint-report.html`) | **ĐẠT** | `package.json`, `eslint-report.html` |
+| 14 | **Skill AI kiểm tra codebase xuất report, đánh giá & chấm điểm** | Skill `backend-review-nestjs`, lệnh `npm run audit:independent` xuất báo cáo | **ĐẠT** | `.agents/skills/backend-review-nestjs/SKILL.md` |
 
 ---
 
@@ -114,20 +138,20 @@
 
 ---
 
-## Tổng kết kết quả thẩm định
+## Tổng kết kết quả thẩm định & Chấm điểm
 
-| Nhóm Tiêu Chí | Đạt | Chưa đạt | N/A |
-| :--- | :---: | :---: | :---: |
-| 1. Database & TypeORM | 7 | 0 | 1 |
-| 2. Chức năng nghiệp vụ | 5 | 0 | 0 |
-| 3. Chuẩn NestJS | 6 | 0 | 0 |
-| 4. Chuẩn RESTful & HTTP | 6 | 0 | 0 |
-| 5. Chuẩn MVC & cấu trúc | 4 | 0 | 0 |
-| 6. Logic & bảo mật | 3 | 0 | 2 |
-| 7. Naming (quy tắc đặt tên) | 4 | 0 | 0 |
-| 8. Format & tooling | 3 | 0 | 0 |
-| 9. Code logic & TypeORM usage | 3 | 0 | 0 |
-| **Tổng cộng (44 Tiêu chí)** | **41** | **0** | **3** |
+| Nhóm Tiêu Chí | Đạt | Chưa đạt | N/A | Điểm Đạt Được |
+| :--- | :---: | :---: | :---: | :---: |
+| 1. Database & TypeORM | 7 | 0 | 1 | **7/7 (100%)** |
+| 2. Chức năng nghiệp vụ | 5 | 0 | 0 | **5/5 (100%)** |
+| 3. Chuẩn NestJS | 6 | 0 | 0 | **6/6 (100%)** |
+| 4. Chuẩn RESTful & HTTP | 6 | 0 | 0 | **6/6 (100%)** |
+| 5. Chuẩn MVC & cấu trúc | 4 | 0 | 0 | **4/4 (100%)** |
+| 6. Logic & bảo mật | 3 | 0 | 2 | **3/3 (100%)** |
+| 7. Naming (quy tắc đặt tên) | 4 | 0 | 0 | **4/4 (100%)** |
+| 8. Format & tooling | 3 | 0 | 0 | **3/3 (100%)** |
+| 9. Code logic & TypeORM usage | 3 | 0 | 0 | **3/3 (100%)** |
+| **Tổng cộng (44 Tiêu chí)** | **41** | **0** | **3** | **100 / 100 Điểm** |
 
 ### Trạng thái các điểm Tech Lead đã phản biện (REPORT.md cũ)
 
