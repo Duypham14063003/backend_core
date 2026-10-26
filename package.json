@@ -24,6 +24,8 @@
     "migration:generate": "typeorm-ts-node-commonjs migration:generate -d src/database/data-source.ts",
     "audit": "ts-node -O '{\"module\":\"commonjs\"}' scripts/audit-codebase.ts",
     "demo": "ts-node -O '{\"module\":\"commonjs\"}' scripts/demo-apis.ts",
+    "verify": "ts-node -O '{\"module\":\"commonjs\"}' scripts/verify-all.ts",
+    "test:requirements": "ts-node -O '{\"module\":\"commonjs\"}' scripts/verify-all.ts",
     "test": "jest",
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
