@@ -4,6 +4,7 @@ import { AuthService } from '../auth/auth.service';
 import { UserProfileResponseDto } from './dto/user-profile-response.dto';
 import { UpdateProfileDto } from './dto/update-profile.dto';
 import { ChangePasswordDto } from './dto/change-password.dto';
+import { USER_MESSAGES } from '../../common/constants/messages.constant';
 
 @Injectable()
 export class ProfileService {
@@ -15,7 +16,7 @@ export class ProfileService {
   public async getProfile(userId: string): Promise<UserProfileResponseDto> {
     const user = await this.usersService.findById(userId);
     if (!user) {
-      throw new NotFoundException(`User with ID ${userId} not found`);
+      throw new NotFoundException(USER_MESSAGES.USER_NOT_FOUND);
     }
     return UserProfileResponseDto.fromEntity(user);
   }
@@ -26,7 +27,7 @@ export class ProfileService {
   ): Promise<UserProfileResponseDto> {
     const user = await this.usersService.findById(userId);
     if (!user) {
-      throw new NotFoundException(`User with ID ${userId} not found`);
+      throw new NotFoundException(USER_MESSAGES.USER_NOT_FOUND);
     }
 
     const updatedUser = await this.usersService.update(userId, {
@@ -42,31 +43,24 @@ export class ProfileService {
     userId: string,
     dto: ChangePasswordDto,
   ): Promise<{ message: string }> {
-    const user = await this.usersService.findById(userId);
+    // Single query selecting password by ID - avoids redundant double-fetch
+    const user = await this.usersService.findById(userId, true);
     if (!user) {
-      throw new NotFoundException(`User with ID ${userId} not found`);
+      throw new NotFoundException(USER_MESSAGES.USER_NOT_FOUND);
     }
 
-    const userWithPassword = await this.usersService.findByEmail(user.email, true);
-    if (!userWithPassword) {
-      throw new NotFoundException('User credentials not found');
-    }
-
-    const isMatch = await this.authService.comparePasswords(
-      dto.oldPassword,
-      userWithPassword.password,
-    );
+    const isMatch = await this.authService.comparePasswords(dto.oldPassword, user.password);
     if (!isMatch) {
-      throw new BadRequestException('Current password does not match');
+      throw new BadRequestException(USER_MESSAGES.CURRENT_PASSWORD_INCORRECT);
     }
 
     if (dto.oldPassword === dto.newPassword) {
-      throw new BadRequestException('New password must be different from current password');
+      throw new BadRequestException(USER_MESSAGES.NEW_PASSWORD_SAME_AS_OLD);
     }
 
     const newHashed = await this.authService.hashPassword(dto.newPassword);
     await this.usersService.updatePassword(userId, newHashed);
 
-    return { message: 'Password changed successfully' };
+    return { message: USER_MESSAGES.PASSWORD_CHANGED_SUCCESS };
   }
 }

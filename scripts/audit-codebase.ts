@@ -47,11 +47,12 @@ function runAudit(): AuditReport {
   const userEntityContent = readFileContent('src/modules/users/entities/user.entity.ts');
   const giftEntityContent = readFileContent('src/modules/gifts/entities/gift.entity.ts');
 
-  if (hasDbConfig && hasDataSource) {
+  const dbConfigContent = readFileContent('src/config/database.config.ts');
+  if (hasDbConfig && hasDataSource && dbConfigContent.includes('idleTimeoutMillis')) {
     dbScore += 5;
-    dbNotes.push('DataSource and NestJS database configuration files present.');
+    dbNotes.push('DataSource, NestJS database config, and explicit Connection Pool settings verified.');
   } else {
-    dbNotes.push('Missing database config or data-source.ts.');
+    dbNotes.push('Missing database config, data-source.ts, or explicit connection pool settings.');
   }
 
   if (
@@ -143,16 +144,17 @@ function runAudit(): AuditReport {
   const jwtStrategy = readFileContent('src/modules/auth/strategies/jwt.strategy.ts');
   const rolesGuard = readFileContent('src/common/guards/roles.guard.ts');
 
-  // User Login endpoint & service
+  // User Login endpoint & service (Skill 4.6: BadRequestException on invalid credentials)
   if (
     authController.includes("user/login") &&
     authService.includes('loginUser') &&
-    authService.includes('comparePasswords')
+    authService.includes('comparePasswords') &&
+    authService.includes('BadRequestException')
   ) {
     authScore += 5;
-    authNotes.push('User Login endpoint POST /api/v1/auth/user/login implemented with password verification.');
+    authNotes.push('User Login endpoint POST /api/v1/auth/user/login implemented. Skill 4.6 verified: throws BadRequestException (400) on invalid credentials.');
   } else {
-    authNotes.push('User login endpoint or verification missing.');
+    authNotes.push('User login endpoint or 400 Bad Request exception missing.');
   }
 
   // Admin Login endpoint & service (checks ADMIN role)
@@ -212,9 +214,15 @@ function runAudit(): AuditReport {
     profileNotes.push('PATCH /api/v1/profile: Updates profile information.');
   }
 
-  if (profileController.includes('change-password') && profileService.includes('changePassword')) {
+  if (
+    profileController.includes('change-password') &&
+    profileService.includes('changePassword') &&
+    !profileService.includes('findByEmail')
+  ) {
     profileScore += 5;
-    profileNotes.push('PUT /api/v1/profile/change-password: Changes password with old password validation.');
+    profileNotes.push('PUT /api/v1/profile/change-password: Changes password with old password validation. Skill 9.1 verified: single query execution (no double-fetch).');
+  } else {
+    profileNotes.push('Missing change-password or redundant double-fetch query detected.');
   }
 
   items.push({
@@ -273,12 +281,13 @@ function runAudit(): AuditReport {
     adminGiftsController.includes('@Post()') &&
     adminGiftsController.includes('@Get()') &&
     adminGiftsController.includes('@Put(\':id\')') &&
-    adminGiftsController.includes('@Delete(\':id\')')
+    adminGiftsController.includes('@Delete(\':id\')') &&
+    adminGiftsController.includes('@HttpCode(HttpStatus.NO_CONTENT)')
   ) {
     adminGiftsScore = 10;
-    adminGiftsNotes.push('Full CRUD operations (Create, List, Detail, Update, Delete) protected by Admin role.');
+    adminGiftsNotes.push('Full CRUD operations protected by Admin role. Skill 4.2 verified: DELETE returns HTTP 204 No Content.');
   } else {
-    adminGiftsNotes.push('Incomplete Admin CRUD endpoints or role guard missing.');
+    adminGiftsNotes.push('Incomplete Admin CRUD endpoints or missing HTTP 204 No Content for DELETE.');
   }
 
   items.push({

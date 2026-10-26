@@ -1,6 +1,6 @@
 # Codebase Evaluation & Audit Report
 
-> **Audit Timestamp:** 2026-10-26T03:01:29.858Z  
+> **Audit Timestamp:** 2026-10-26T04:26:04.741Z  
 > **Total Score:** **100 / 100**  
 > **Overall Grade:** **A+ (Excellent)**
 
@@ -25,7 +25,7 @@ Codebase achieved 100/100 points (A+ (Excellent)). All core architectural, RESTf
 ## 3. Detailed Criteria Analysis
 
 ### DB_TYPEORM: PostgreSQL + TypeORM Entity Modeling (15/15 pts)
-- DataSource and NestJS database configuration files present.
+- DataSource, NestJS database config, and explicit Connection Pool settings verified.
 - User entity configured with TypeORM UUID, roles enum, timestamps, and indexes.
 - Gift entity configured with TypeORM UUID, unique code, stock, and points.
 
@@ -35,7 +35,7 @@ Codebase achieved 100/100 points (A+ (Excellent)). All core architectural, RESTf
 - Migration defines DDL for users, gifts tables, and indexes.
 
 ### AUTH_MODULE: User & Admin Authentication with JWT & Role Guards (20/20 pts)
-- User Login endpoint POST /api/v1/auth/user/login implemented with password verification.
+- User Login endpoint POST /api/v1/auth/user/login implemented. Skill 4.6 verified: throws BadRequestException (400) on invalid credentials.
 - Admin Login endpoint POST /api/v1/auth/admin/login enforces UserRole.ADMIN.
 - JWT Token generation and Passport JWT Bearer Strategy configured.
 - RolesGuard RBAC system implemented with ForbiddenException for unauthorized roles.
@@ -43,14 +43,14 @@ Codebase achieved 100/100 points (A+ (Excellent)). All core architectural, RESTf
 ### PROFILE_MODULE: RESTful API User Profile (View, Update, Change Password) (15/15 pts)
 - GET /api/v1/profile: Retrieves authenticated user profile.
 - PATCH /api/v1/profile: Updates profile information.
-- PUT /api/v1/profile/change-password: Changes password with old password validation.
+- PUT /api/v1/profile/change-password: Changes password with old password validation. Skill 9.1 verified: single query execution (no double-fetch).
 
 ### USER_GIFTS: RESTful API User Gifts Catalog (Browse & View Active Gifts) (10/10 pts)
 - GET /api/v1/gifts: Lists available active gifts with search and pagination.
 - GET /api/v1/gifts/:id: Views specific gift details for users.
 
 ### ADMIN_GIFTS: RESTful API Admin Gift Management (CRUD + Admin Protection) (10/10 pts)
-- Full CRUD operations (Create, List, Detail, Update, Delete) protected by Admin role.
+- Full CRUD operations protected by Admin role. Skill 4.2 verified: DELETE returns HTTP 204 No Content.
 
 ### ARCHITECTURE: NestJS Layered MVC Architecture, DTOs, Pipes & Filters (10/10 pts)
 - Global ValidationPipe with strict whitelist and DTO transformation.

@@ -88,7 +88,7 @@ export default tseslint.config(
       ],
 
       // 3. Code Cleanliness & Best Practices
-      'no-console': ['warn', { allow: ['warn', 'error', 'info', 'log'] }],
+      'no-console': ['error', { allow: ['warn', 'error'] }],
       'no-duplicate-imports': 'error',
       'prefer-const': 'error',
       eqeqeq: ['error', 'always'],

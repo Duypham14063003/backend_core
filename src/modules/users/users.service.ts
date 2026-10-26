@@ -2,6 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from './entities/user.entity';
+import { USER_MESSAGES } from '../../common/constants/messages.constant';
 
 @Injectable()
 export class UsersService {
@@ -10,8 +11,15 @@ export class UsersService {
     private readonly userRepository: Repository<User>,
   ) {}
 
-  public async findById(id: string): Promise<User | null> {
-    return this.userRepository.findOne({ where: { id } });
+  public async findById(id: string, includePassword = false): Promise<User | null> {
+    if (!includePassword) {
+      return this.userRepository.findOne({ where: { id } });
+    }
+    return this.userRepository
+      .createQueryBuilder('user')
+      .where('user.id = :id', { id })
+      .addSelect('user.password')
+      .getOne();
   }
 
   public async findByEmail(email: string, includePassword = false): Promise<User | null> {
@@ -34,7 +42,7 @@ export class UsersService {
   public async update(id: string, updateData: Partial<User>): Promise<User> {
     const user = await this.findById(id);
     if (!user) {
-      throw new NotFoundException(`User with ID ${id} not found`);
+      throw new NotFoundException(USER_MESSAGES.USER_NOT_FOUND);
     }
 
     Object.assign(user, updateData);
@@ -44,7 +52,7 @@ export class UsersService {
   public async updatePassword(id: string, hashedPassword: string): Promise<void> {
     const result = await this.userRepository.update(id, { password: hashedPassword });
     if (result.affected === 0) {
-      throw new NotFoundException(`User with ID ${id} not found`);
+      throw new NotFoundException(USER_MESSAGES.USER_NOT_FOUND);
     }
   }
 

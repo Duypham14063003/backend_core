@@ -1,11 +1,14 @@
+import { Logger } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 import AppDataSource from './data-source';
 import { User } from '../modules/users/entities/user.entity';
 import { Gift } from '../modules/gifts/entities/gift.entity';
 import { UserRole } from '../common/constants/roles.enum';
 
+const logger = new Logger('Seed');
+
 async function runSeed(): Promise<void> {
-  console.info('🌱 Starting database seeding...');
+  logger.log('🌱 Starting database seeding...');
   await AppDataSource.initialize();
 
   const userRepository = AppDataSource.getRepository(User);
@@ -25,9 +28,9 @@ async function runSeed(): Promise<void> {
       points: 9999,
     });
     await userRepository.save(admin);
-    console.info(`✓ Seeded Admin: ${adminEmail} (password: Admin123@)`);
+    logger.log(`✓ Seeded Admin: ${adminEmail} (password: Admin123@)`);
   } else {
-    console.info(`- Admin already exists: ${adminEmail}`);
+    logger.log(`- Admin already exists: ${adminEmail}`);
   }
 
   // 2. Seed Standard User
@@ -44,9 +47,9 @@ async function runSeed(): Promise<void> {
       points: 500,
     });
     await userRepository.save(user);
-    console.info(`✓ Seeded User: ${userEmail} (password: User123@)`);
+    logger.log(`✓ Seeded User: ${userEmail} (password: User123@)`);
   } else {
-    console.info(`- User already exists: ${userEmail}`);
+    logger.log(`- User already exists: ${userEmail}`);
   }
 
   // 3. Seed Gifts
@@ -103,12 +106,12 @@ async function runSeed(): Promise<void> {
     if (!existingGift) {
       const gift = giftRepository.create(giftData);
       await giftRepository.save(gift);
-      console.info(`✓ Seeded Gift: ${giftData.code} - ${giftData.title}`);
+      logger.log(`✓ Seeded Gift: ${giftData.code} - ${giftData.title}`);
     }
   }
 
   await AppDataSource.destroy();
-  console.info('✨ Seeding completed successfully!');
+  logger.log('✨ Seeding completed successfully!');
 }
 
 void runSeed();

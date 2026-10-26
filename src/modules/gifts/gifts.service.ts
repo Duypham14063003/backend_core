@@ -8,6 +8,7 @@ import { UserQueryGiftDto } from './dto/user-query-gift.dto';
 import { AdminQueryGiftDto } from './dto/admin-query-gift.dto';
 import { GiftResponseDto } from './dto/gift-response.dto';
 import { PaginatedResult } from '../../common/dto/pagination.dto';
+import { GIFT_MESSAGES } from '../../common/constants/messages.constant';
 
 @Injectable()
 export class GiftsService {
@@ -62,7 +63,7 @@ export class GiftsService {
     });
 
     if (!gift) {
-      throw new NotFoundException(`Gift with ID ${id} not found or is currently unavailable`);
+      throw new NotFoundException(GIFT_MESSAGES.GIFT_NOT_AVAILABLE);
     }
 
     return GiftResponseDto.fromEntity(gift);
@@ -74,7 +75,7 @@ export class GiftsService {
     const code = dto.code.toUpperCase().trim();
     const existing = await this.giftRepository.findOne({ where: { code } });
     if (existing) {
-      throw new ConflictException(`Gift code '${code}' is already in use`);
+      throw new ConflictException(GIFT_MESSAGES.GIFT_CODE_EXISTS);
     }
 
     const gift = this.giftRepository.create({
@@ -128,7 +129,7 @@ export class GiftsService {
   public async getGiftDetailForAdmin(id: string): Promise<GiftResponseDto> {
     const gift = await this.giftRepository.findOne({ where: { id } });
     if (!gift) {
-      throw new NotFoundException(`Gift with ID ${id} not found`);
+      throw new NotFoundException(GIFT_MESSAGES.GIFT_NOT_FOUND);
     }
     return GiftResponseDto.fromEntity(gift);
   }
@@ -136,7 +137,7 @@ export class GiftsService {
   public async updateGift(id: string, dto: UpdateGiftDto): Promise<GiftResponseDto> {
     const gift = await this.giftRepository.findOne({ where: { id } });
     if (!gift) {
-      throw new NotFoundException(`Gift with ID ${id} not found`);
+      throw new NotFoundException(GIFT_MESSAGES.GIFT_NOT_FOUND);
     }
 
     if (dto.code) {
@@ -144,7 +145,7 @@ export class GiftsService {
       if (code !== gift.code) {
         const conflict = await this.giftRepository.findOne({ where: { code } });
         if (conflict) {
-          throw new ConflictException(`Gift code '${code}' is already in use`);
+          throw new ConflictException(GIFT_MESSAGES.GIFT_CODE_EXISTS);
         }
         gift.code = code;
       }
@@ -161,13 +162,12 @@ export class GiftsService {
     return GiftResponseDto.fromEntity(saved);
   }
 
-  public async deleteGift(id: string): Promise<{ message: string }> {
+  public async deleteGift(id: string): Promise<void> {
     const gift = await this.giftRepository.findOne({ where: { id } });
     if (!gift) {
-      throw new NotFoundException(`Gift with ID ${id} not found`);
+      throw new NotFoundException(GIFT_MESSAGES.GIFT_NOT_FOUND);
     }
 
     await this.giftRepository.remove(gift);
-    return { message: `Gift with ID ${id} deleted successfully` };
   }
 }

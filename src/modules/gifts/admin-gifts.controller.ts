@@ -8,6 +8,7 @@ import {
   Param,
   Query,
   UseGuards,
+  HttpCode,
   HttpStatus,
   ParseUUIDPipe,
 } from '@nestjs/common';
@@ -94,10 +95,11 @@ export class AdminGiftsController {
   }
 
   @Delete(':id')
+  @HttpCode(HttpStatus.NO_CONTENT)
   @ApiOperation({ summary: 'Delete a gift by ID (Admin only)' })
   @ApiResponse({
-    status: HttpStatus.OK,
-    description: 'Gift deleted successfully',
+    status: HttpStatus.NO_CONTENT,
+    description: 'Gift deleted successfully (No Content)',
   })
   @ApiResponse({
     status: HttpStatus.NOT_FOUND,
@@ -105,7 +107,7 @@ export class AdminGiftsController {
   })
   public async deleteGift(
     @Param('id', new ParseUUIDPipe({ version: '4' })) id: string,
-  ): Promise<{ message: string }> {
-    return this.giftsService.deleteGift(id);
+  ): Promise<void> {
+    await this.giftsService.deleteGift(id);
   }
 }

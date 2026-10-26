@@ -72,6 +72,17 @@ async function runDemo(): Promise<void> {
   printResult('1.1 User Login: POST /api/v1/auth/user/login', userLogin.status, userLogin.body);
   const userToken: string | undefined = userLogin.body?.data?.accessToken;
 
+  // 1.1b Test Login sai mật khẩu (Quy ước chuẩn: 400 Bad Request)
+  const badLogin = await request('POST', '/api/v1/auth/user/login', {
+    email: 'user@example.com',
+    password: 'WrongPassword123@',
+  });
+  printResult(
+    '1.1b Test Login sai mật khẩu (Kỳ vọng: 400 Bad Request theo checklist Lead)',
+    badLogin.status,
+    badLogin.body,
+  );
+
   if (!userToken) {
     console.error('❌ Không lấy được User Token, vui lòng chạy `npm run seed` trước!');
     return;
@@ -188,10 +199,10 @@ async function runDemo(): Promise<void> {
       updateGift.body,
     );
 
-    // 4.3 Admin xóa quà vừa tạo
+    // 4.3 Admin xóa quà vừa tạo (Kỳ vọng: 204 No Content)
     const deleteGift = await request('DELETE', `/api/v1/admin/gifts/${newGiftId}`, undefined, adminToken);
     printResult(
-      `4.3 Admin Delete Gift: DELETE /api/v1/admin/gifts/${newGiftId}`,
+      `4.3 Admin Delete Gift: DELETE /api/v1/admin/gifts/${newGiftId} (Kỳ vọng: 204 No Content)`,
       deleteGift.status,
       deleteGift.body,
     );

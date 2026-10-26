@@ -33,6 +33,10 @@ export class AuthController {
     description: 'User login successful',
     type: AuthResponseDto,
   })
+  @ApiResponse({
+    status: HttpStatus.BAD_REQUEST,
+    description: 'Invalid email or password / deactivated account',
+  })
   public async loginUser(@Body() dto: UserLoginDto): Promise<AuthResponseDto> {
     return this.authService.loginUser(dto);
   }
@@ -45,6 +49,10 @@ export class AuthController {
     status: HttpStatus.OK,
     description: 'Admin login successful',
     type: AuthResponseDto,
+  })
+  @ApiResponse({
+    status: HttpStatus.BAD_REQUEST,
+    description: 'Invalid email or password / deactivated account',
   })
   @ApiResponse({
     status: HttpStatus.FORBIDDEN,

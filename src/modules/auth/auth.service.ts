@@ -1,6 +1,6 @@
 import {
   Injectable,
-  UnauthorizedException,
+  BadRequestException,
   ForbiddenException,
   ConflictException,
 } from '@nestjs/common';
@@ -10,6 +10,7 @@ import * as bcrypt from 'bcrypt';
 import { UsersService } from '../users/users.service';
 import { User } from '../users/entities/user.entity';
 import { UserRole } from '../../common/constants/roles.enum';
+import { AUTH_MESSAGES } from '../../common/constants/messages.constant';
 import { UserLoginDto } from './dto/user-login.dto';
 import { AdminLoginDto } from './dto/admin-login.dto';
 import { RegisterUserDto } from './dto/register-user.dto';
@@ -27,7 +28,7 @@ export class AuthService {
   public async registerUser(dto: RegisterUserDto): Promise<AuthResponseDto> {
     const existing = await this.usersService.findByEmail(dto.email);
     if (existing) {
-      throw new ConflictException('Email address is already registered');
+      throw new ConflictException(AUTH_MESSAGES.EMAIL_ALREADY_REGISTERED);
     }
 
     const hashedPassword = await this.hashPassword(dto.password);
@@ -47,16 +48,16 @@ export class AuthService {
   public async loginUser(dto: UserLoginDto): Promise<AuthResponseDto> {
     const user = await this.usersService.findByEmail(dto.email, true);
     if (!user) {
-      throw new UnauthorizedException('Invalid email or password');
+      throw new BadRequestException(AUTH_MESSAGES.INVALID_CREDENTIALS);
     }
 
     if (!user.isActive) {
-      throw new UnauthorizedException('Account has been deactivated');
+      throw new BadRequestException(AUTH_MESSAGES.ACCOUNT_DEACTIVATED);
     }
 
     const isMatch = await this.comparePasswords(dto.password, user.password);
     if (!isMatch) {
-      throw new UnauthorizedException('Invalid email or password');
+      throw new BadRequestException(AUTH_MESSAGES.INVALID_CREDENTIALS);
     }
 
     return this.generateAuthResponse(user);
@@ -65,20 +66,20 @@ export class AuthService {
   public async loginAdmin(dto: AdminLoginDto): Promise<AuthResponseDto> {
     const user = await this.usersService.findByEmail(dto.email, true);
     if (!user) {
-      throw new UnauthorizedException('Invalid email or password');
+      throw new BadRequestException(AUTH_MESSAGES.INVALID_CREDENTIALS);
     }
 
     if (!user.isActive) {
-      throw new UnauthorizedException('Account has been deactivated');
+      throw new BadRequestException(AUTH_MESSAGES.ACCOUNT_DEACTIVATED);
     }
 
     const isMatch = await this.comparePasswords(dto.password, user.password);
     if (!isMatch) {
-      throw new UnauthorizedException('Invalid email or password');
+      throw new BadRequestException(AUTH_MESSAGES.INVALID_CREDENTIALS);
     }
 
     if (user.role !== UserRole.ADMIN) {
-      throw new ForbiddenException('Access denied. Administrator privileges required');
+      throw new ForbiddenException(AUTH_MESSAGES.ADMIN_PRIVILEGES_REQUIRED);
     }
 
     return this.generateAuthResponse(user);

@@ -3,6 +3,7 @@ import { Reflector } from '@nestjs/core';
 import { AuthGuard } from '@nestjs/passport';
 import { IS_PUBLIC_KEY } from '../decorators/public.decorator';
 import { Observable } from 'rxjs';
+import { AUTH_MESSAGES } from '../constants/messages.constant';
 
 @Injectable()
 export class JwtAuthGuard extends AuthGuard('jwt') {
@@ -39,10 +40,10 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
       throw new UnauthorizedException(err);
     }
     if (err) {
-      throw new UnauthorizedException('Authentication credentials invalid');
+      throw new UnauthorizedException(AUTH_MESSAGES.CREDENTIALS_INVALID);
     }
     if (!user) {
-      throw new UnauthorizedException('Authentication credentials missing or invalid');
+      throw new UnauthorizedException(AUTH_MESSAGES.CREDENTIALS_MISSING);
     }
     return user as TUser;
   }

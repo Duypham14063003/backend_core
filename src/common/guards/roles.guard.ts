@@ -2,6 +2,7 @@ import { Injectable, CanActivate, ExecutionContext, ForbiddenException } from '@
 import { Reflector } from '@nestjs/core';
 import { ROLES_KEY } from '../decorators/roles.decorator';
 import { UserRole } from '../constants/roles.enum';
+import { AUTH_MESSAGES } from '../constants/messages.constant';
 import { User } from '../../modules/users/entities/user.entity';
 
 @Injectable()
@@ -22,7 +23,7 @@ export class RolesGuard implements CanActivate {
     const user = request.user;
 
     if (!user) {
-      throw new ForbiddenException('User authentication context not found');
+      throw new ForbiddenException(AUTH_MESSAGES.AUTH_CONTEXT_NOT_FOUND);
     }
 
     const hasRole = requiredRoles.includes(user.role);

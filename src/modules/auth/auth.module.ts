@@ -14,14 +14,23 @@ import { JwtStrategy } from './strategies/jwt.strategy';
     JwtModule.registerAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
-      useFactory: (configService: ConfigService) => ({
-        secret:
+      useFactory: (configService: ConfigService) => {
+        const secret =
+          configService.get<string>('jwt.secret') ||
           configService.get<string>('JWT_SECRET') ||
-          'super-secret-jwt-key-for-backendcore-system-2026',
-        signOptions: {
-          expiresIn: (configService.get<string>('JWT_EXPIRES_IN') || '86400s') as `${number}s`,
-        },
-      }),
+          'super-secret-jwt-key-for-backendcore-system-2026';
+        const expiresIn =
+          configService.get<string | number>('jwt.expiresIn') ||
+          configService.get<string>('JWT_EXPIRES_IN') ||
+          86400;
+
+        return {
+          secret,
+          signOptions: {
+            expiresIn: typeof expiresIn === 'number' ? expiresIn : (expiresIn as `${number}s`),
+          },
+        };
+      },
     }),
   ],
   controllers: [AuthController],
